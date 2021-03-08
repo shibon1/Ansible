@@ -1,0 +1,42 @@
+#Configure ssh for auto without necessat login
+cd .ssh/
+
+nano id_rsa
+
+# Copy your key.pem for id_rsa
+chmod 400 id_rsa
+
+nano id_rsa.pub
+
+#Copy the authorized_keys for id_rsa.pub
+cat auth
+
+chmod 400 id_rsa.pub
+
+#Login in the specifc IP without necessary "yes"
+nano /etc/ssh/ssh_config
+
+Host 172.*.*.*
+   StrictHostKeyChecking no
+   UserKnownHostsFile=/dev/null
+   
+# Install the Ansible
+apt install ansible
+
+mkdir ansible
+
+nano ansible
+
+#ADD the group and IP
+EX: [CLIENT]
+*.*.*.*
+
+#Testing
+
+ansible -i IP -m ping 127.0.0.1
+
+ansible -i hosts IP -m shell -a "ls -l /tmp/"
+
+#Login in clinet and create in /tmp and exit again and realize again the test
+
+ansible -i hosts IP -m shell -a "ls -l /tmp/"
