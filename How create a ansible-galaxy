@@ -1,0 +1,53 @@
+#Create your ansible-galaxy;
+ansible-galaxy init (NAME_OF_ROLE)
+cd (NAME_OF_ROLE)
+
+#Create a directory for specify for clients;
+nano hosts
+[clients]
+*.*.*.*
+*.*.*.*
+
+nano ansible.cfg
+[defaults]
+roles_path = ../
+
+#Create your playbook
+nano playbook.yml
+---
+- name: Update all clients
+  hosts: all
+  connection: local
+  gather_facts: yes
+  become: false
+  roles:
+    - { role: (NAME_OF_ROLE) }
+
+nano defaults/main.yml
+---
+incluir_task1: true
+incluir_task2: false
+# defaults file for projeto
+
+nano defaults/task1.yml
+---
+    - name: All IPv4 addresses
+      debug: msg="{{ ansible_all_ipv4_addresses }}"
+
+
+nano defaults/task2.yml
+    - name: Default IPv4 addresses
+      debug: msg="{{ ansible_default_ipv4.address }}"
+
+nano defaults/main.yml
+
+---
+- include: task1.yml
+  when: incluir_task1
+
+- include: task2.yml
+  when: incluir_task2
+# tasks file for projeto
+
+#Test if your ansible-galaxy is correct
+ansible-playbook -i hosts playbook.yml
